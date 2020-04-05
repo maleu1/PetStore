@@ -18,6 +18,14 @@ namespace PetStore
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseKestrel()
+                        // enter your IP address from your local network
+                        .UseUrls("http://localhost:5001" /*, "http://192.168.x.x:5001"*/)
+                        .UseIISIntegration()
+                        .UseStartup<Startup>();
+                });
     }
 }
