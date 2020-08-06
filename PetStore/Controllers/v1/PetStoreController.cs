@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PetStore.Models;
 
-namespace PetStore.Controllers
+namespace PetStore.Controllers.v1
 {
     [ApiController]
     [Route("[controller]")]
+    [ApiVersion("1")] // in this example, API version 1 does not support flutter which is why there is no v1.1
     public class PetStoreController : ControllerBase
     {
         // this should be replaced by a persistence layer with e.g. a database connection. 

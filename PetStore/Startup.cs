@@ -30,7 +30,7 @@ namespace PetStore
             
             services.AddVersionedApiExplorer(o =>
             {
-                o.GroupNameFormat = "'v'V";
+                o.GroupNameFormat = "'v'VV";
                 o.DefaultApiVersion = new ApiVersion(1, 0);
                 o.AssumeDefaultVersionWhenUnspecified = true;
             });
@@ -72,7 +72,10 @@ namespace PetStore
                 {
                     if (!string.IsNullOrWhiteSpace(description.GroupName))
                     {
-                        c.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
+                        c.SwaggerDoc(description.GroupName,
+                            IsFlutterApi(description) 
+                                ? CreateFlutterInfo(description.ApiVersion.MajorVersion ?? 1) 
+                                : CreateInfoForApiVersion(description));
                     }
                 }
 
@@ -103,7 +106,10 @@ namespace PetStore
                     // build a swagger endpoint for each discovered API version
                     foreach (ApiVersionDescription description in provider.ApiVersionDescriptions)
                     {
-                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                            IsFlutterApi(description) 
+                                ? "V2.0 - flutter only API"
+                                : description.GroupName.ToUpperInvariant());
                     }
                     
                     options.DocExpansion(DocExpansion.None);
@@ -138,6 +144,28 @@ namespace PetStore
             }
 
             return info;
+        }
+        
+        private static OpenApiInfo CreateFlutterInfo(int majorVersion)
+        {
+            var info = new OpenApiInfo()
+            {
+                Title = "PetStore Flutter API",
+                Version = $"{majorVersion}.0",
+                Description = "Public APIs of PetStore's flutter app.",
+                Contact = new OpenApiContact()
+                {
+                    Name = "PetStore Company",
+                    Url = new Uri("https://www.PetStoreCompany.com")
+                }
+            };
+
+            return info;
+        }
+        
+        private static bool IsFlutterApi(ApiVersionDescription description)
+        {
+            return description.ApiVersion.MinorVersion == 1;
         }
     }
 }

@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace PetStore
 {
@@ -23,7 +17,7 @@ namespace PetStore
                     webBuilder
                         .UseKestrel()
                         // enter your IP address from your local network
-                        .UseUrls("http://localhost:5001" /*, "http://192.168.x.x:5001"*/)
+                        .UseUrls("http://localhost:55698" /*, "http://192.168.x.x:55698/swagger/index.html"*/)
                         .UseIISIntegration()
                         .UseStartup<Startup>();
                 });
